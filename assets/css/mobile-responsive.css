@@ -1,0 +1,192 @@
+
+/* ==========================================
+   ORGANIC FARMING - GLOBAL MOBILE DESIGN
+   Desktop styles remain unchanged.
+========================================== */
+
+@media screen and (max-width: 768px) {
+
+    html {
+        width: 100%;
+        max-width: 100%;
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+        font-size: 14px;
+    }
+
+    body {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: hidden;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    img, video, canvas {
+        max-width: 100%;
+    }
+
+    h1 {
+        font-size: 23px !important;
+        line-height: 1.3;
+    }
+
+    h2 {
+        font-size: 20px !important;
+        line-height: 1.35;
+    }
+
+    h3 {
+        font-size: 17px !important;
+        line-height: 1.4;
+    }
+
+    h4 {
+        font-size: 14px !important;
+    }
+
+    p, label, li {
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    input, select, textarea {
+        width: 100%;
+        max-width: 100%;
+        min-height: 42px;
+        font-size: 14px !important;
+    }
+
+    button, .btn, .button {
+        min-height: 40px;
+        max-width: 100%;
+        font-size: 13px;
+    }
+
+    /* Page containers */
+    .container,
+    .main-content,
+    .page-content,
+    .content,
+    .main {
+        max-width: 100%;
+        min-width: 0;
+        padding: 14px !important;
+    }
+
+    /* Responsive cards */
+    .card,
+    .info-card,
+    .content-card,
+    .market-card,
+    .panel,
+    .stat-card {
+        min-width: 0;
+        padding: 15px !important;
+        margin-bottom: 13px;
+        border-radius: 12px;
+    }
+
+    /* Responsive grids */
+    .stats,
+    .stats-grid,
+    .dashboard-grid,
+    .form-grid,
+    .form-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+    }
+
+    /* Single-column content sections */
+    .single-column,
+    .full-width-mobile {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Navigation tabs */
+    .tabs,
+    .tab-buttons,
+    .panel-tabs {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 8px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .tabs > *,
+    .tab-buttons > *,
+    .panel-tabs > * {
+        flex: 0 0 auto;
+    }
+
+    /* Tables */
+    .table-responsive,
+    .table-scroll,
+    .table-container {
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        min-width: 480px;
+    }
+
+    /* Quick actions */
+    .quick-action-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 9px;
+    }
+
+    /* Charts */
+    .chart-wrap {
+        max-width: 100%;
+        height: 230px;
+    }
+
+    /* Footer */
+    footer {
+        font-size: 11px;
+        text-align: center;
+    }
+}
+
+/* Small mobile screens */
+@media screen and (max-width: 380px) {
+
+    .container,
+    .main-content,
+    .page-content,
+    .content,
+    .main {
+        padding: 10px !important;
+    }
+
+    .stats,
+    .stats-grid,
+    .dashboard-grid,
+    .form-grid,
+    .form-row {
+        grid-template-columns: 1fr !important;
+    }
+
+    h1 {
+        font-size: 21px !important;
+    }
+
+    h2 {
+        font-size: 18px !important;
+    }
+
+    .card,
+    .info-card,
+    .content-card {
+        padding: 12px !important;
+    }
+}
+

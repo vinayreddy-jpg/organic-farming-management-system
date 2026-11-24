@@ -1,0 +1,583 @@
+/* ==========================================
+   ORGANIC FARM - REGISTRATION PAGE
+   Professional Botanical Theme
+========================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    min-height: 100%;
+    width: 100%;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #294532;
+    background:
+        radial-gradient(circle at 10% 15%,
+            rgba(130, 180, 100, 0.15), transparent 25%),
+        radial-gradient(circle at 90% 85%,
+            rgba(48, 115, 68, 0.13), transparent 28%),
+        linear-gradient(135deg, #f7faf3, #edf4e9, #f9fbf6);
+    background-attachment: fixed;
+}
+
+/* PAGE LAYOUT */
+
+.registration-page {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 16px;
+    position: relative;
+}
+
+/* MAIN GREEN PANEL */
+
+.registration-page > .registration-card,
+.registration-page > section.registration-card {
+    width: 100%;
+    max-width: 500px;
+    padding: 28px 32px;
+    background: linear-gradient(145deg, #174b32, #246b45);
+    border: 1px solid rgba(180, 220, 165, 0.45);
+    border-radius: 20px;
+    box-shadow: 0 20px 55px rgba(27, 75, 45, 0.18);
+}
+
+/* WELCOME HEADING */
+
+.welcome-section {
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    padding: 22px 18px 16px;
+    margin: 0 auto;
+}
+
+.welcome-section h1 {
+    display: inline-block;
+    padding: 11px 17px;
+    border: 1px solid rgba(196, 225, 165, 0.65);
+    border-radius: 12px;
+    color: #ffffff;
+    font-size: 25px;
+    font-weight: 750;
+    line-height: 1.3;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.farm-quote,
+.welcome-section h2 {
+    color: #e1f0df;
+    font-size: 13px;
+    font-style: italic;
+    margin-top: 13px;
+}
+
+.welcome-line {
+    width: 50px;
+    height: 3px;
+    background: #a6d85c;
+    border-radius: 5px;
+    margin: 17px auto 0;
+}
+
+/* FORM OUTLINE */
+
+.registration-card form {
+    width: 100%;
+    padding: 19px;
+    border: 1px solid rgba(190, 224, 180, 0.55);
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.07);
+}
+
+/* SINGLE COLUMN FORM */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 13px;
+    width: 100%;
+}
+
+/* INPUT FIELDS */
+
+.field {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 7px;
+}
+
+.field label {
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 650;
+}
+
+.field input {
+    width: 100%;
+    height: 43px;
+    padding: 0 13px;
+    border: 1px solid #d8e6d6;
+    border-radius: 9px;
+    outline: none;
+    background: #ffffff;
+    color: #294532;
+    font-size: 13px;
+    transition: 0.25s ease;
+}
+
+.field input::placeholder {
+    color: #98a797;
+}
+
+.field input:focus {
+    border-color: #a8d85d;
+    box-shadow: 0 0 0 3px rgba(166, 216, 92, 0.2);
+}
+
+/* CREATE ACCOUNT BUTTON */
+
+.register-button {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 13px;
+    width: 100%;
+    min-height: 49px;
+    margin-top: 19px;
+    border: 1px solid #b6df72;
+    border-radius: 10px;
+    background: linear-gradient(110deg, #8fbd4b, #60963a);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 750;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(10, 35, 20, 0.15);
+    transition: 0.3s ease;
+}
+
+.register-button span {
+    font-size: 21px;
+    transition: transform 0.3s ease;
+}
+
+.register-button:hover {
+    background: linear-gradient(110deg, #a4d45d, #75a944);
+    transform: translateY(-2px);
+    box-shadow: 0 9px 20px rgba(10, 35, 20, 0.22);
+}
+
+.register-button:hover span {
+    transform: translateX(5px);
+}
+
+/* LOGIN LINK */
+
+.auth-links {
+    text-align: center;
+    margin-top: 20px;
+    color: #e7f1e5;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.auth-links a {
+    display: inline-block;
+    color: #c9f18d;
+    font-weight: 750;
+    text-decoration: none;
+    margin-left: 4px;
+    transition: 0.2s ease;
+}
+
+.auth-links a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+/* REMOVE BACK TO HOME */
+
+.home-link {
+    display: none !important;
+}
+
+/* FOOTER */
+
+.panel-footer {
+    text-align: center;
+    color: #d4e9d2;
+    font-size: 11px;
+    margin-top: 20px;
+    padding-bottom: 2px;
+}
+
+/* SUCCESS AND ERROR MESSAGES */
+
+.registration-card p.error,
+.registration-card p.success {
+    padding: 10px 12px;
+    margin-bottom: 13px;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+.registration-card p.error {
+    color: #8e2020;
+    background: #fff0f0;
+    border: 1px solid #efcaca;
+}
+
+.registration-card p.success {
+    color: #205b32;
+    background: #edfaed;
+    border: 1px solid #c6e7c6;
+}
+
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 600px) {
+    .registration-page {
+        padding: 18px 12px;
+    }
+
+    .registration-page > .registration-card,
+    .registration-page > section.registration-card {
+        padding: 20px 17px;
+        border-radius: 15px;
+    }
+
+    .welcome-section {
+        padding: 15px 8px;
+    }
+
+    .welcome-section h1 {
+        font-size: 20px;
+        padding: 10px 12px;
+    }
+
+    .registration-card form {
+        padding: 14px;
+    }
+
+    .field input {
+        height: 42px;
+    }
+}
+/* FINAL REGISTRATION PAGE VISUAL FIX */
+
+.registration-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 16px;
+    gap: 18px;
+    background:
+        radial-gradient(circle at 12% 18%, rgba(126, 174, 91, 0.13), transparent 25%),
+        radial-gradient(circle at 88% 82%, rgba(36, 104, 62, 0.12), transparent 28%),
+        linear-gradient(135deg, #f7faf3, #eaf2e5);
+}
+
+/* Welcome heading */
+.welcome-section {
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    padding: 18px 15px;
+    background: #ffffff;
+    border: 1px solid #c9ddc3;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(30, 80, 45, 0.08);
+}
+
+.welcome-section h1 {
+    color: #194d30;
+    font-size: 25px;
+    font-weight: 800;
+    margin: 0 0 9px;
+}
+
+.welcome-section .farm-quote {
+    color: #63834e;
+    font-size: 13px;
+    font-style: italic;
+    margin: 0;
+}
+
+.welcome-line {
+    width: 48px;
+    height: 3px;
+    background: #8fbd4f;
+    border-radius: 5px;
+    margin: 14px auto 0;
+}
+
+/* Registration card */
+.registration-card {
+    width: 100%;
+    max-width: 500px;
+    padding: 25px;
+    background: #ffffff;
+    border: 1px solid #d8e5d3;
+    border-radius: 16px;
+    box-shadow: 0 14px 38px rgba(30, 80, 45, 0.12);
+}
+
+/* Form outline */
+.registration-card form {
+    padding: 20px;
+    border: 1px solid #c5d9c0;
+    border-radius: 12px;
+    background: #fbfdf9;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 13px;
+}
+
+.field {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.field label {
+    color: #294b34;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.field input {
+    width: 100%;
+    height: 43px;
+    padding: 0 12px;
+    border: 1px solid #d4e1d0;
+    border-radius: 8px;
+    background: #ffffff;
+    font-size: 13px;
+}
+
+.field input:focus {
+    outline: none;
+    border-color: #55945b;
+    box-shadow: 0 0 0 3px rgba(85, 148, 91, 0.12);
+}
+
+/* Create account button */
+.register-button {
+    width: 100%;
+    min-height: 46px;
+    margin-top: 18px;
+    border: none;
+    border-radius: 9px;
+    background: linear-gradient(110deg, #75a943, #397b43);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 750;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.register-button:hover {
+    background: linear-gradient(110deg, #5d9234, #245d35);
+    transform: translateY(-2px);
+    box-shadow: 0 7px 17px rgba(43, 103, 54, 0.2);
+}
+
+/* Login link */
+.auth-links {
+    text-align: center;
+    margin-top: 17px;
+    color: #526c56;
+    font-size: 13px;
+}
+
+.auth-links a {
+    color: #23663a;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.auth-links a:hover {
+    text-decoration: underline;
+}
+
+/* Footer */
+.panel-footer {
+    text-align: center;
+    color: #64816a;
+    font-size: 11px;
+    margin-top: 3px;
+}
+
+@media (max-width: 600px) {
+    .registration-page {
+        padding: 20px 12px;
+    }
+
+    .welcome-section,
+    .registration-card {
+        max-width: 100%;
+    }
+
+    .registration-card {
+        padding: 16px;
+    }
+
+    .registration-card form {
+        padding: 15px;
+    }
+
+    .welcome-section h1 {
+        font-size: 21px;
+    }
+}
+/* Improved login link */
+.auth-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 22px;
+    color: #e5f3e8;
+    font-size: 13px;
+    text-align: center;
+}
+
+.auth-links .login-link {
+    display: inline-block;
+    padding: 10px 25px;
+    border: 1px solid #a6d76e;
+    border-radius: 25px;
+    background: rgba(166, 215, 110, 0.13);
+    color: #c7f18e;
+    font-size: 13px;
+    font-weight: 750;
+    text-decoration: none;
+    transition: all 0.25s ease;
+}
+
+.auth-links .login-link:hover {
+    background: #a6d76e;
+    color: #194d30;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 14px rgba(0, 0, 0, 0.15);
+} 
+/* LOGIN PAGE */
+.registration-page .welcome-section h1 {
+    color: #194d30;
+}
+
+.registration-page .registration-card form {
+    margin-bottom: 0;
+}
+
+.registration-page .auth-links {
+    margin-bottom: 12px;
+}
+
+.registration-page .panel-footer {
+    color: #c7e5c9;
+    text-align: center;
+    font-size: 11px;
+    margin-top: 15px;
+}
+/* Forgot Password Link */
+
+.forgot-password {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.forgot-password a {
+    color: #194d30;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-block;
+    visibility: visible;
+    opacity: 1;
+}
+
+.forgot-password a:hover {
+    color: #6ba544;
+    text-decoration: underline;
+}
+
+/* ==========================================
+   FORGOT PASSWORD - FINAL DESIGN OVERRIDE
+   Match the white registration card design
+========================================== */
+
+.registration-page > section.registration-card {
+    background: #ffffff !important;
+    border: 1px solid #d8e5d3;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 14px 38px rgba(30, 80, 45, 0.12);
+}
+
+.registration-page > section.registration-card form {
+    background: #fbfdf9 !important;
+    border: 1px solid #c5d9c0;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.registration-page > section.registration-card .field label {
+    color: #294b34 !important;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.registration-page > section.registration-card .field input {
+    width: 100%;
+    height: 46px;
+    background: #ffffff;
+    color: #294532;
+    border: 1px solid #d4e1d0;
+    border-radius: 9px;
+    padding: 0 13px;
+}
+
+.registration-page > section.registration-card .form-description {
+    color: #526c56;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.registration-page > section.registration-card .auth-links {
+    color: #526c56;
+}
+
+.registration-page > section.registration-card .auth-links .login-link {
+    color: #23663a;
+    border-color: #8fbd4f;
+    background: #f3f8ed;
+}
+
+.registration-page > section.registration-card .panel-footer {
+    color: #64816a;
+}

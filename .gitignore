@@ -1,0 +1,33 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+
+# Database credentials and uploads
+config/database.php
+uploads/
+
+# Backups
+*.backup
+*.before-refinements
+*.layout-backup
+*.mobile-backup
+*.sidebar-backup
+
+# Testing files
+ai-test.php
+check.php
+db-test.php
+hello.php
+test.php
+crops copy.php
+
+# Database exports and archives
+*.sql
+*.zip
+*.log
+
+# Additional backups
+*-backup.php
+*-before-rewrite.php
+*.bak

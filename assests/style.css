@@ -1,0 +1,224 @@
+
+.auth-logo {
+    text-align: center;
+    font-size: 25px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #194d30;
+    margin-bottom: 20px;
+}
+
+.auth-logo span {
+    color: #79a947;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 17px;
+}
+
+.field label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #31543a;
+}
+
+.field input {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #dce6dc;
+    border-radius: 9px;
+    box-sizing: border-box;
+}
+
+.field input:focus {
+    outline: none;
+    border-color: #39804b;
+}
+
+.forgot-link {
+    text-align: right;
+    margin: -5px 0 18px;
+}
+
+.forgot-link a,
+.auth-footer a,
+.auth-home a {
+    color: #28643b;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.forgot-link a:hover,
+.auth-footer a:hover,
+.auth-home a:hover {
+    text-decoration: underline;
+}
+
+.auth-footer,
+.auth-home {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* =================================
+   ORGANIC FARMING - PREMIUM DESIGN
+================================= */
+
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 15% 20%, #d9edcf 0, transparent 32%),
+        radial-gradient(circle at 85% 80%, #d2e9d5 0, transparent 30%),
+        #f5f8ef;
+    font-family: "Segoe UI", Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Center layout */
+
+.auth-container {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 16px;
+    box-sizing: border-box;
+}
+
+/* Main card */
+
+.auth-card {
+    position: relative;
+    width: 100%;
+    max-width: 450px;
+    padding: 42px 38px;
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid #e1ecdf;
+    border-radius: 25px;
+    box-shadow: 0 20px 60px rgba(35, 91, 52, 0.12);
+    box-sizing: border-box;
+    animation: cardAppear 0.7s ease;
+}
+
+/* Brand accent */
+
+.auth-card::before {
+    content: "GROW • LEARN • SUSTAIN";
+    display: block;
+    width: fit-content;
+    margin: 0 auto 22px;
+    padding: 8px 15px;
+    background: #e8f4e7;
+    color: #287342;
+    border-radius: 30px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+/* Heading */
+
+.auth-card h2 {
+    color: #174f32;
+    font-size: 27px;
+    text-align: center;
+    margin-bottom: 12px;
+    letter-spacing: -0.7px;
+}
+
+.auth-card > p {
+    color: #748477;
+    text-align: center;
+    margin-bottom: 24px;
+    font-size: 14px;
+}
+
+/* Input fields */
+
+.auth-card input:not([type="hidden"]) {
+    display: block;
+    width: 100%;
+    height: 49px;
+    padding: 0 16px;
+    margin-bottom: 15px;
+    border: 1px solid #dce8dc;
+    border-radius: 12px;
+    background: #f9fcf8;
+    color: #234c31;
+    font-size: 14px;
+    outline: none;
+    transition: 0.25s ease;
+    box-sizing: border-box;
+}
+
+.auth-card input:focus {
+    border-color: #378c55;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(55, 140, 85, 0.10);
+}
+
+/* Main button */
+
+.auth-card button {
+    width: 100%;
+    min-height: 50px;
+    margin-top: 8px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #287342, #174f32);
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.auth-card button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 9px 20px rgba(23, 79, 50, 0.22);
+}
+
+/* Links */
+
+.auth-card a {
+    color: #287342;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.auth-card a:hover {
+    text-decoration: underline;
+}
+
+/* Animation */
+
+@keyframes cardAppear {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+    .auth-card {
+        max-width: 100%;
+        padding: 32px 22px;
+        border-radius: 20px;
+    }
+
+    .auth-card h2 {
+        font-size: 23px;
+    }
+}
