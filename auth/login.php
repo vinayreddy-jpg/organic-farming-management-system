@@ -16,7 +16,7 @@ $flashes = pull_flashes();
 
     <title>Farmer Login | Organic Farming</title>
 
-    <link rel="stylesheet" href="../assests/auth.css?v=5">
+    <<link rel="stylesheet" href="../assests/auth.css?v=6">
 </head>
 
 <body>
@@ -33,11 +33,11 @@ $flashes = pull_flashes();
 
     <section class="registration-card">
 
-        <?php foreach ($flashes as [$type, $message]): ?>
-            <p class="<?= e($type) ?>">
-                <?= e($message) ?>
-            </p>
-        <?php endforeach; ?>
+       <?php foreach ($flashes as $flashMessage): ?>
+    <div class="auth-alert error">
+        ⚠ <?= e($flashMessage['message'] ?? '') ?>
+    </div>
+<?php endforeach; ?>
 
         <form action="login-submit.php" method="POST">
 

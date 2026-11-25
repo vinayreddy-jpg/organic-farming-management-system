@@ -77,6 +77,32 @@ $selectedCatalogId = 0;
 $selectedPart = '';
 $problemDescription = '';
 $selectedSymptoms = [];
+$selectedSoilType = '';
+
+$selectedFertilizers = [];
+
+$allowedSoilTypes = [
+    'Red Soil',
+    'Black Soil',
+    'Sandy Soil',
+    'Clay Soil',
+    'Loamy Soil',
+    'Alluvial Soil',
+    'Laterite Soil',
+    'Other',
+    'Not Sure'
+];
+
+$allowedFertilizers = [
+    'Farmyard Manure (FYM)',
+    'Vermicompost',
+    'Compost',
+    'Neem Cake',
+    'Panchagavya',
+    'Jeevamrutham',
+    'Other',
+    'Not Using Any Fertilizer'
+];
 
 $allowedSymptoms = [
     'Yellow Leaves',
@@ -152,10 +178,11 @@ $catalogStmt = $pdo->query("
     SELECT
         MIN(id) AS id,
         crop_name,
-        category
+        category,
+        season
     FROM crop_catalog
-    GROUP BY crop_name, category
-    ORDER BY category ASC, crop_name ASC
+    GROUP BY crop_name, category, season
+    ORDER BY category ASC, crop_name ASC, season ASC
 ");
 
 $catalogCrops = $catalogStmt->fetchAll(PDO::FETCH_ASSOC);
@@ -212,6 +239,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $selectedPart = trim(
             (string)($_POST['affected_part'] ?? '')
         );
+        /* Get soil type */
+
+$selectedSoilType = trim(
+    (string)($_POST['soil_type'] ?? '')
+);
+
+if (
+    $selectedSoilType !== '' &&
+    !in_array($selectedSoilType, $allowedSoilTypes, true)
+) {
+    throw new RuntimeException('Please select a valid soil type.');
+}
+
+/* Get organic fertilizers used */
+
+$postedFertilizers = $_POST['fertilizers_used'] ?? [];
+
+if (!is_array($postedFertilizers)) {
+    $postedFertilizers = [];
+}
+
+$selectedFertilizers = array_values(
+    array_intersect(
+        $allowedFertilizers,
+        $postedFertilizers
+    )
+);
+
+/* Prevent selecting "None" with other fertilizers */
+
+if (
+    in_array('Not Using Any Fertilizer', $selectedFertilizers, true) &&
+    count($selectedFertilizers) > 1
+) {
+    throw new RuntimeException(
+        'Select Not Using Any Fertilizer or choose the fertilizers used.'
+    );
+}
+
+$fertilizersUsed = implode(', ', $selectedFertilizers);
 
         $problemDescription = trim(
             (string)($_POST['problem_description'] ?? '')
@@ -344,42 +411,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         );
 
-        /* =================================================
-           SAVE REPORT
-        ================================================= */
+        
+/* =================================================
+   SAVE REPORT
+================================================= */
 
-        $insertReport = $pdo->prepare("
-            INSERT INTO crop_problem_reports
-            (
-                user_id,
-                crop_record_id,
-                issue_id,
-                crop_name,
-                problem_description,
-                observed_symptoms,
-                image_path,
-                status
-            )
-            VALUES
-            (
-                :user_id,
-                :crop_record_id,
-                NULL,
-                :crop_name,
-                :problem_description,
-                :observed_symptoms,
-                NULL,
-                'Pending'
-            )
-        ");
+$insertReport = $pdo->prepare("
+    INSERT INTO crop_problem_reports
+    (
+        user_id,
+        crop_record_id,
+        issue_id,
+        crop_name,
+        soil_type,
+        fertilizers_used,
+        problem_description,
+        observed_symptoms,
+        image_path,
+        status
+    )
+    VALUES
+    (
+        :user_id,
+        :crop_record_id,
+        NULL,
+        :crop_name,
+        :soil_type,
+        :fertilizers_used,
+        :problem_description,
+        :observed_symptoms,
+        NULL,
+        'Pending'
+    )
+");
 
-        $insertReport->execute([
-            ':user_id' => $userId,
-            ':crop_record_id' => $cropRecordId,
-            ':crop_name' => $cropName,
-            ':problem_description' => $problemDescription,
-            ':observed_symptoms' => $observedSymptoms
-        ]);
+$insertReport->execute([
+    ':user_id' => $userId,
+    ':crop_record_id' => $cropRecordId,
+    ':crop_name' => $cropName,
+    ':soil_type' => $selectedSoilType ?: null,
+    ':fertilizers_used' => $fertilizersUsed ?: null,
+    ':problem_description' => $problemDescription,
+    ':observed_symptoms' => $observedSymptoms
+]);
+
+$success = 'Your crop problem report was submitted successfully.';
+
 
         $success = 'Your crop problem report was submitted successfully.';
 
@@ -865,10 +942,169 @@ button {
     background: #2d7045;
     color: #ffffff !important;
 }
+.pest-page-header {
+    background: linear-gradient(120deg, #194d30, #087c49);
+    padding: 30px;
+    border-radius: 16px;
+    margin: 25px 0;
+    color: #ffffff;
+    box-shadow: 0 6px 18px rgba(25, 77, 48, 0.14);
+}
+
+.pest-header-content {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.pest-header-icon {
+    font-size: 42px;
+    flex-shrink: 0;
+}
+
+
+
+.pest-page-header {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 25px 0 22px;
+    padding: 30px 40px;
+    background: linear-gradient(120deg, #194d30, #087c49);
+    border-radius: 16px;
+    color: #ffffff;
+    box-shadow: 0 6px 18px rgba(25, 77, 48, 0.14);
+}
+
+.pest-header-content {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.pest-header-icon {
+    font-size: 42px;
+    flex-shrink: 0;
+}
+
+.pest-header-content h1 {
+    color: #ffffff;
+    font-size: 28px;
+    margin: 0 0 10px;
+}
+
+.pest-header-content p {
+    color: #e5f3e9;
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .pest-page-header {
+        padding: 22px 18px;
+    }
+
+    .pest-header-content h1 {
+        font-size: 21px;
+    }
+
+    .pest-header-icon {
+        font-size: 32px;
+    }
+}
+
+/* SOIL AND FERTILIZER SECTION */
+
+.soil-fertilizer-grid {
+    display: grid;
+    grid-template-columns: minmax(220px, 0.85fr) minmax(0, 1.5fr);
+    gap: 24px;
+    align-items: start;
+    margin: 20px 0 28px;
+}
+
+.soil-fertilizer-grid .form-group {
+    min-width: 0;
+}
+
+.soil-fertilizer-grid select {
+    width: 100%;
+    min-height: 46px;
+    box-sizing: border-box;
+}
+
+.soil-fertilizer-grid label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #244b32;
+}
+
+.fertilizer-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.fertilizer-option {
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+    min-height: 46px;
+    padding: 10px 12px;
+    margin: 0 !important;
+    background: #f7faf7;
+    border: 1px solid #dce9df;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    box-sizing: border-box;
+}
+
+.fertilizer-option:hover {
+    background: #edf6ef;
+    border-color: #75a986;
+}
+
+.fertilizer-option input {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+    accent-color: #21834b;
+    margin: 0;
+}
+
+.fertilizer-option span {
+    font-size: 13px;
+    line-height: 1.4;
+    font-weight: 500;
+    color: #294b34;
+}
+
+.fertilizer-field .help-text {
+    display: block;
+    margin-top: 10px;
+    color: #718176;
+    font-size: 12px;
+}
+
+@media (max-width: 700px) {
+    .soil-fertilizer-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 420px) {
+    .fertilizer-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 
 </style>
 
-<link rel="stylesheet" href="/organic-farming/assets/css/mobile-responsive.css">
+<link rel="stylesheet" href="../assets/css/mobile-responsive.css">
 </head>
 
 <body>
@@ -880,19 +1116,23 @@ button {
 <main class="main-content">
 
     <a href="../dashboard.php" class="dashboard-back-link">← Back to Dashboard</a>
-
-    <header class="page-header">
-
-        <h1>🌿 Pest & Disease Management</h1>
-
-        <p>
-            Identify crop problems and explore possible
-            pest and disease matches with organic treatment guidance.
-        </p>
+</header>
+    <div class="pest-page-header">
+    <div class="pest-header-content">
+        <span class="pest-header-icon">🌿</span>
+        <div>
+            <h1>Pest & Disease Management</h1>
+            <p>
+                Identify crop problems and explore possible pest
+                and disease matches with organic treatment guidance.
+            </p>
+        </div>
+    </div>
+</div>
 
     </header>
 
-    <?php if ($success !== ''): ?>˙ß
+    <?php if ($success !== ''): ?>
 
         <div class="message">
             <?= e($success) ?>
@@ -1064,6 +1304,60 @@ button {
                 <h3 class="section-heading">
                     Describe the Crop Problem
                 </h3>
+
+
+<h3 class="section-heading">
+    Soil & Fertilizer Details
+</h3>
+
+<div class="soil-fertilizer-grid">
+
+    <div class="form-group soil-field">
+        <label for="soil_type">Soil Type</label>
+
+        <select name="soil_type" id="soil_type">
+            <option value="">Select Soil Type</option>
+
+            <?php foreach ($allowedSoilTypes as $soil): ?>
+                <option
+                    value="<?= e($soil) ?>"
+                    <?= $selectedSoilType === $soil ? 'selected' : '' ?>
+                >
+                    <?= e($soil) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+
+    <div class="form-group fertilizer-field">
+        <label>Organic Fertilizers Used</label>
+
+        <div class="fertilizer-grid">
+            <?php foreach ($allowedFertilizers as $fertilizer): ?>
+                <label class="fertilizer-option">
+                    <input
+                        type="checkbox"
+                        name="fertilizers_used[]"
+                        value="<?= e($fertilizer) ?>"
+                        <?= in_array(
+                            $fertilizer,
+                            $selectedFertilizers,
+                            true
+                        ) ? 'checked' : '' ?>
+                    >
+                    <span><?= e($fertilizer) ?></span>
+                </label>
+            <?php endforeach; ?>
+        </div>
+
+        <small class="help-text">
+            Select all organic fertilizers currently used.
+        </small>
+    </div>
+
+</div>
+
+
 
                 <div class="form-grid">
 

@@ -31,3 +31,10 @@ crops copy.php
 *-backup.php
 *-before-rewrite.php
 *.bak
+config/production.php
+config/*.local-backup
+config/*.local-backup
+
+# Local backups and pre-change files
+*.local-backup
+*.before-*

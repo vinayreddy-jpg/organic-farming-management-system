@@ -1020,7 +1020,7 @@ footer {
 
 </style>
 
-<link rel="stylesheet" href="/organic-farming/assets/css/mobile-responsive.css">
+<link rel="stylesheet" href="assets/css/mobile-responsive.css">
 </head>
 
 <body>

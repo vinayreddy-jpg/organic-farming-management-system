@@ -18,17 +18,17 @@ $password = $_POST['password'] ?? '';
 
 // Validate empty fields
 if ($username === '' || $mobile === '' || $password === '') {
-    fail('Please enter all login details.');
+    flash('error', 'Please enter all login details.');
+    redirect('auth/login.php');
 }
 
 // Validate mobile number
 if (!preg_match('/^[6-9][0-9]{9}$/', $mobile)) {
-    fail('Enter a valid 10-digit mobile number.');
+    flash('error', 'Enter a valid 10-digit mobile number.');
+    redirect('auth/login.php');
 }
 
 try {
-
-    // Connect to database
     $pdo = db();
 
     // Find user
@@ -47,28 +47,30 @@ try {
     );
 
     $stmt->execute([$username, $mobile]);
-
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Verify username, mobile and password
+    // Verify credentials
     if (
         !$user ||
         !password_verify($password, $user['password_hash'])
     ) {
-        fail('Invalid username, mobile number or password.');
+        flash('error', 'Invalid username, mobile number or password.');
+        redirect('auth/login.php');
     }
 
     // Check account status
     if ($user['status'] !== 'active') {
-        fail('Your account is inactive. Please contact the administrator.');
+        flash('error', 'Your account is inactive. Please contact the administrator.');
+        redirect('auth/login.php');
     }
 
     // Validate user role
     if (!in_array($user['role'], ['admin', 'farmer'], true)) {
-        fail('Invalid account type. Please contact the administrator.');
+        flash('error', 'Invalid account type. Please contact the administrator.');
+        redirect('auth/login.php');
     }
 
-    // Regenerate session ID for security
+    // Regenerate session ID
     session_regenerate_id(true);
 
     // Store logged-in user details
@@ -81,15 +83,14 @@ try {
     ];
 
     // Clear old CSRF token
-    unset($_SESSION['csrf']);
+    unset($_SESSION['csrf_token']);
 
     // Redirect to dashboard
     redirect('dashboard.php');
 
 } catch (PDOException $e) {
-
-    // Log database error
     error_log('Login error: ' . $e->getMessage());
 
-    fail('Unable to log in right now. Please try again.');
+    flash('error', 'Unable to log in right now. Please try again.');
+    redirect('auth/login.php');
 }

@@ -1,16 +1,65 @@
 <?php
 declare(strict_types=1);
 
+/*
+|--------------------------------------------------------------------------
+| Session
+|--------------------------------------------------------------------------
+*/
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'organic_farming_db');
-define('DB_USER', 'root');
-define('DB_PASS', '');
 
-function db(): PDO {
+/*
+|--------------------------------------------------------------------------
+| Environment and database configuration
+|--------------------------------------------------------------------------
+*/
+
+$hostName = strtolower(
+    explode(':', $_SERVER['HTTP_HOST'] ?? 'localhost')[0]
+);
+
+$isProduction = ($hostName === 'organicfarming.great-site.net');
+
+if ($isProduction) {
+    $productionConfig = __DIR__ . '/../config/production.php';
+
+    if (!file_exists($productionConfig)) {
+        error_log('Production database configuration is missing.');
+        http_response_code(500);
+        exit('Application configuration error.');
+    }
+
+    $config = require $productionConfig;
+    $APP_BASE_URL = '/';
+} else {
+    $config = [
+        'host'     => 'localhost',
+        'database' => 'organic_farming_db',
+        'username' => 'root',
+        'password' => ''
+    ];
+
+    $APP_BASE_URL = '/organic-farming/';
+}
+
+define('DB_HOST', $config['host']);
+define('DB_NAME', $config['database']);
+define('DB_USER', $config['username']);
+define('DB_PASS', $config['password']);
+
+
+/*
+|--------------------------------------------------------------------------
+| PDO database connection
+|--------------------------------------------------------------------------
+*/
+
+function db(): PDO
+{
     static $pdo = null;
 
     if ($pdo === null) {
@@ -18,74 +67,127 @@ function db(): PDO {
                ';dbname=' . DB_NAME .
                ';charset=utf8mb4';
 
-        $pdo = new PDO($dsn, DB_USER, DB_PASS, [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES => false
-        ]);
+        try {
+            $pdo = new PDO($dsn, DB_USER, DB_PASS, [
+                PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES   => false
+            ]);
+        } catch (PDOException $e) {
+            error_log('Database connection error: ' . $e->getMessage());
+            http_response_code(500);
+            exit('Database connection failed. Please try again later.');
+        }
     }
 
     return $pdo;
 }
 
-function e(?string $value): string {
-    return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
-}
+/*
+|--------------------------------------------------------------------------
+| Application base URL
+|--------------------------------------------------------------------------
+*/
 
-function redirect(string $path): never {
+function redirect(string $path): never
+{
+    global $APP_BASE_URL;
 
-    $baseUrl = "/organic-farming/";
+    $url = $APP_BASE_URL . ltrim($path, '/');
 
-    header("Location: " . $baseUrl . ltrim($path, "/"));
-
+    header('Location: ' . $url);
     exit;
 }
 
-function flash(string $type, string $message): void {
-    $_SESSION['flashes'][] = [$type, $message];
+/*
+|--------------------------------------------------------------------------
+| Output escaping
+|--------------------------------------------------------------------------
+*/
+
+function e(?string $value): string
+{
+    return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
 }
 
-function pull_flashes(): array {
-    $flashes = $_SESSION['flashes'] ?? [];
-    unset($_SESSION['flashes']);
-    return $flashes;
-}
+/*
+|--------------------------------------------------------------------------
+| Flash messages
+|--------------------------------------------------------------------------
+*/
 
-function csrf(): string {
-    if (empty($_SESSION['csrf'])) {
-        $_SESSION['csrf'] = bin2hex(random_bytes(32));
+function flash(string $type, string $message): void
+{
+    if (!isset($_SESSION['flashes'])) {
+        $_SESSION['flashes'] = [];
     }
 
-    return $_SESSION['csrf'];
+    $_SESSION['flashes'][] = [
+        'type'    => $type,
+        'message' => $message
+    ];
+}
+
+function pull_flashes(): array
+{
+    $messages = $_SESSION['flashes'] ?? [];
+    unset($_SESSION['flashes']);
+
+    return $messages;
+}
+
+/*
+|--------------------------------------------------------------------------
+| CSRF protection
+|--------------------------------------------------------------------------
+*/
+
+function csrf(): string
+{
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+
+    return $_SESSION['csrf_token'];
 }
 
 
-function require_csrf(): void {
-    $token = $_POST['csrf'] ?? $_POST['csrf_token'] ?? '';
+function require_csrf(): void
+{
+    $submittedToken = $_POST['csrf'] ?? $_POST['csrf_token'] ?? '';
 
     if (
-        !is_string($token) ||
-        !isset($_SESSION['csrf']) ||
-        !hash_equals($_SESSION['csrf'], $token)
+        !is_string($submittedToken) ||
+        empty($_SESSION['csrf_token']) ||
+        !hash_equals($_SESSION['csrf_token'], $submittedToken)
     ) {
-        fail('Invalid security token. Please try again.');
+        http_response_code(403);
+        exit('Invalid security token. Please refresh the page and try again.');
     }
 }
 
 
-function fail(string $message): never {
+/*
+|--------------------------------------------------------------------------
+| Error response
+|--------------------------------------------------------------------------
+*/
 
-    flash('error', $message);
-
-    $script = basename($_SERVER['SCRIPT_NAME'] ?? '');
-
-    if ($script === 'register-submit.php') {
-        redirect('auth/register.php');
-    }
-
-    redirect('auth/login.php');
+function fail(string $message, int $statusCode = 400): never
+{
+    http_response_code($statusCode);
+    exit($message);
 }
 
-function current_user(): ?array {
-    return $_SESSION['user'] ?? null;
+/*
+|--------------------------------------------------------------------------
+| Logged-in user
+|--------------------------------------------------------------------------
+*/
+
+function current_user(): ?array
+{
+    return isset($_SESSION['user']) && is_array($_SESSION['user'])
+        ? $_SESSION['user']
+        : null;
 }

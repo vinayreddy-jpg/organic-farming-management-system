@@ -1,0 +1,3 @@
+<FilesMatch "^(production\.php)$">
+    Require all denied
+</FilesMatch>
